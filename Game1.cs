@@ -49,8 +49,8 @@ public class Game1 : Game
         _player = new Player(_grid, _camera, new Vector2(5, 5));
         _enemies = new List<Enemy>
         {
-            new Enemy(new Vector2(10, 10)),
-            new Enemy(new Vector2(15, 8))
+            new Enemy(new Vector2(10, 10), _player, _grid),
+            new Enemy(new Vector2(15, 8), _player, _grid)
         };
 
         base.Initialize();
