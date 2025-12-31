@@ -1,0 +1,83 @@
+# Plan for Isometric Dungeon Crawler
+
+This plan outlines the steps to create an isometric dungeon crawl game using C# and MonoGame, based on the provided specifications.
+
+## 1. Project Setup
+- Initialize a new MonoGame Cross-Platform Desktop Application project.
+- Create a directory structure to organize the code:
+  - `Core`: Main game loop, camera, input handling.
+  - `World`: Grid, cell, and level management.
+  - `Entities`: Base entity class, Player, and Enemy classes.
+  - `AI`: Pathfinding (A*) and Behavior Tree implementation.
+  - `Graphics`: Rendering-related code.
+  - `Collision`: Spatial hashing and collision detection/resolution logic.
+  - `Content`: The folder where MonoGame's content pipeline will process assets.
+
+## 2. Grid and Level Representation
+- Create a `Grid` class to manage the 2D array of `Cell` objects.
+- Define a `Cell` or `Tile` class/struct to store properties like `IsWalkable`, `TileType` (Floor, Wall).
+- Implement a simple, hardcoded dungeon layout within the `Grid` class for initial testing.
+
+## 3. Core Rendering System
+- Create a `Camera` class to manage the game view. Implement logic to translate world coordinates to screen coordinates for the isometric projection.
+- Implement scroll functionality in the `Camera` class, responding to arrow key inputs.
+- Develop a `TilemapRenderer` that iterates through the `Grid` and draws the appropriate tile (`floor.png` or `wall.png`) at its isometric position.
+- Create a `SpriteRenderer` for drawing entities (Player, Enemy). Initially, this can draw geometric shapes (circles) as specified, before switching to sprites.
+
+## 4. A* Pathfinding
+- Implement a generic A* pathfinding algorithm.
+- The algorithm should take a start point, end point, and the `Grid` as input.
+- It must support 8-directional (diagonal) movement.
+- Add a rule to the neighbor-finding logic to prevent "corner cutting": when considering a diagonal move, the two adjacent cardinal tiles must also be walkable.
+
+## 5. Entity System
+- Create an abstract `GameEntity` base class with properties for `Position`, `Velocity`, and a `BoundingBox` (rectangle).
+- Create a `Player` class inheriting from `GameEntity`.
+  - Implement mouse input handling to get the destination tile coordinates.
+  - Use the A* algorithm to generate a path and store it.
+  - In the `Update` method, move the player along the stored path frame by frame.
+- Create an `Enemy` class inheriting from `GameEntity`.
+
+## 6. Collision System with Spatial Hashing
+- Implement a `SpatialHash` class. It will map a grid to a dictionary where keys are cell coordinates and values are lists of entities within that cell.
+- Create a `CollisionManager` class.
+- Implement an AABB (Axis-Aligned Bounding Box) collision check method.
+- In the `CollisionManager`, use the `SpatialHash` to get a small number of entities to check against, instead of checking all entities.
+- Implement "sliding" collision resolution. If a collision is detected, project the entity's movement vector onto the collision normal to make it slide along the surface.
+- Ensure that whenever an entity moves, its entry in the `SpatialHash` is updated.
+
+## 7. Enemy AI - Behavior Tree
+- Implement a simple behavior tree system. This requires base classes/interfaces for nodes and composites:
+  - `Node`: The base element.
+  - `Sequence`: Executes children in order until one fails.
+  - `Selector`: Executes children in order until one succeeds.
+  - `Action`: A leaf node that performs a game action.
+- Create concrete `Action` nodes for each required enemy behavior:
+  - `Wander`: Select a random nearby walkable tile and use A* to move there.
+  - `Chase`: Find the player's location, and if within a detection radius, use A* to move towards the player.
+  - `Attack`: If adjacent to the player, enter an "attacking" state.
+  - `Flee`: If a condition is met (e.g., low health), use A* to move away from the player.
+- Construct the enemy's behavior tree using these nodes and integrate its execution into the `Enemy.Update()` method.
+
+## 8. Main Game Loop
+- In the main `Game1.cs` file:
+  - `LoadContent()`: Load all `.png` assets using the Content Pipeline. Instantiate all managers, the grid, player, and enemies.
+  - `Update(GameTime)`:
+    - Handle global input (like camera scrolling).
+    - Update the player (input, path following).
+    - Update all enemies (triggering their behavior trees).
+    - Run the collision detection and resolution logic.
+  - `Draw(GameTime)`:
+    - Begin the `SpriteBatch` with the camera's transformation matrix.
+    - Call the `TilemapRenderer` to draw the dungeon.
+    - Call the `SpriteRenderer` to draw the player and enemies.
+
+## 9. Build Script
+- Create a build script (`build_and_run.bat` for Windows or `build_and_run.sh` for cross-platform).
+- The script should contain two commands:
+  - `dotnet build`
+  - `dotnet run --project <YourProjectName>`
+
+## 10. Final Polish
+- Replace the initial circle representations for the player and enemy with the loaded sprites from `player.png` and `enemy.png`.
+- Adjust game parameters like movement speed, AI detection range, and camera scroll speed for better gameplay feel.

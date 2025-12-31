@@ -1,0 +1,13 @@
+write a topdown computer game similar to the game Diablo 1 with the following specifications:
+- use c# and monogame
+- game based on a grid with moveable and blocked cells in a dungeon style
+- grid is scrollable using the arrow keys
+- view should be isometric perspective
+- there should be player and enemy entities. These should initially be represented by circles.
+- the player entity should be movable by clicking a square in the grid to select the destination and then use the A star function to navigate to the destination
+- the game should have enemies entities that also use A star function to navigate around the grid
+- the A star function should allow diagonal movement but not walk though corners of obstacles when navigating the grid
+- the enemy entities should use a behaviour tree to decide when to stall idle, when to wander, when to chase the player, when to attack the player and when to run away
+- The game should have a collision detection func that uses aabb collision to detect if the moving player or enemy collides with the walls or other entities. the collisions should be resolved by sliding. The func should using spatial hashing to optimise the collision checks. The spatial hash for the player rectangle should be recalculated when the player rectangle moves.
+- use the graphics provided in the assets folder
+- provide a script to compile the c# code and run it
