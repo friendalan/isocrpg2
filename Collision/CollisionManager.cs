@@ -29,12 +29,12 @@ namespace AiGame1.Collision
             // Check and resolve collisions for each entity
             foreach (var entity in entities)
             {
-                CheckAndResolveWallCollisions(entity, gameTime);
-                CheckAndResolveEntityCollisions(entity, gameTime);
+                CheckAndResolveWallCollisions(entity);
+                CheckAndResolveEntityCollisions(entity);
             }
         }
         
-        private void CheckAndResolveWallCollisions(GameEntity entity, GameTime gameTime)
+        private void CheckAndResolveWallCollisions(GameEntity entity)
         {
             Rectangle entityBounds = entity.BoundingBox;
 
@@ -53,14 +53,14 @@ namespace AiGame1.Collision
 
                         if (entityBounds.Intersects(wallBounds))
                         {
-                            ResolveCollision(entity, wallBounds, gameTime);
+                            ResolveCollision(entity, wallBounds);
                         }
                     }
                 }
             }
         }
 
-        private void CheckAndResolveEntityCollisions(GameEntity entity, GameTime gameTime)
+        private void CheckAndResolveEntityCollisions(GameEntity entity)
         {
             List<GameEntity> nearby = _spatialHash.GetNearby(entity);
             foreach (var other in nearby)
@@ -69,14 +69,12 @@ namespace AiGame1.Collision
 
                 if (entity.BoundingBox.Intersects(other.BoundingBox))
                 {
-                    // For now, entity-entity collision is simpler: just stop
-                    // A full sliding resolution is more complex.
-                    ResolveCollision(entity, other.BoundingBox, gameTime);
+                    ResolveCollision(entity, other.BoundingBox);
                 }
             }
         }
         
-        private void ResolveCollision(GameEntity entity, Rectangle obstacleBounds, GameTime gameTime)
+        private void ResolveCollision(GameEntity entity, Rectangle obstacleBounds)
         {
             Rectangle entityBounds = entity.BoundingBox;
             Vector2 penetration = CalculatePenetration(entityBounds, obstacleBounds);
@@ -101,10 +99,6 @@ namespace AiGame1.Collision
             Vector2 slidingVelocity = entity.Velocity - perpendicularVelocity;
 
             entity.Velocity = slidingVelocity;
-
-            // Re-apply the new velocity for the remainder of the frame to complete the slide
-            // This is a simplification; a more robust solution would integrate time remaining.
-            entity.WorldPosition += entity.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
         private Vector2 CalculatePenetration(Rectangle rectA, Rectangle rectB)
