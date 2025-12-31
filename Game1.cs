@@ -1,9 +1,11 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 using AiGame1.Core;
 using AiGame1.Graphics;
 using AiGame1.World;
+using AiGame1.Entities;
 
 namespace AiGame1;
 
@@ -22,6 +24,9 @@ public class Game1 : Game
     private Texture2D _playerTexture; 
     private Texture2D _enemyTexture; 
 
+    private Player _player;
+    private List<Enemy> _enemies;
+
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -37,6 +42,13 @@ public class Game1 : Game
 
         _camera = new Camera(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
         _grid = new Grid(20, 20); // Example grid size
+
+        _player = new Player(_grid, _camera, new Vector2(5, 5));
+        _enemies = new List<Enemy>
+        {
+            new Enemy(new Vector2(10, 10)),
+            new Enemy(new Vector2(15, 8))
+        };
 
         base.Initialize();
     }
@@ -60,6 +72,11 @@ public class Game1 : Game
             Exit();
 
         _camera.Update(gameTime);
+        _player.Update(gameTime);
+        foreach (var enemy in _enemies)
+        {
+            enemy.Update(gameTime);
+        }
 
         base.Update(gameTime);
     }
@@ -72,16 +89,11 @@ public class Game1 : Game
 
         _tilemapRenderer.Draw(_camera);
 
-        // Draw placeholder circles for player and enemy
-        // Convert grid coordinates to world coordinates for drawing
-        Vector2 playerGridPos = new Vector2(5, 5);
-        Vector2 playerWorldPos = Camera.IsometricProjection((int)playerGridPos.X, (int)playerGridPos.Y, TilemapRenderer.TileWidth, TilemapRenderer.TileHeight);
-        _spriteRenderer.DrawCircle(playerWorldPos, 10, Color.Green); // Player in green
-
-        Vector2 enemyGridPos = new Vector2(10, 10);
-        Vector2 enemyWorldPos = Camera.IsometricProjection((int)enemyGridPos.X, (int)enemyGridPos.Y, TilemapRenderer.TileWidth, TilemapRenderer.TileHeight);
-        _spriteRenderer.DrawCircle(enemyWorldPos, 10, Color.Red); // Enemy in red
-
+        _player.Draw(_spriteRenderer);
+        foreach (var enemy in _enemies)
+        {
+            enemy.Draw(_spriteRenderer);
+        }
 
         _spriteBatch.End();
 

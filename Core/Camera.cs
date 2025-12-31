@@ -59,12 +59,21 @@ namespace AiGame1.Core
         // Helper for isometric projection (grid coordinates to world coordinates)
         public static Vector2 IsometricProjection(int gridX, int gridY, int tileWidth, int tileHeight)
         {
-            // The isometric projection typically uses the bottom-center of the tile as the grid coordinate.
-            // Adjustments might be needed based on how the tile textures are designed.
-            // For now, let's assume a diamond shape where the top corner aligns to gridY=0
             float worldX = (gridX - gridY) * (tileWidth / 2f);
             float worldY = (gridX + gridY) * (tileHeight / 2f);
             return new Vector2(worldX, worldY);
+        }
+
+        // Helper for converting world coordinates back to grid coordinates
+        public static Vector2 WorldToGrid(Vector2 worldPosition, int tileWidth, int tileHeight)
+        {
+            float tileWidthHalf = tileWidth / 2f;
+            float tileHeightHalf = tileHeight / 2f;
+
+            float gridX = (worldPosition.X / tileWidthHalf + worldPosition.Y / tileHeightHalf) / 2;
+            float gridY = (worldPosition.Y / tileHeightHalf - worldPosition.X / tileWidthHalf) / 2;
+
+            return new Vector2((int)System.Math.Round(gridX), (int)System.Math.Round(gridY));
         }
     }
 }
