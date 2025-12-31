@@ -30,7 +30,7 @@ namespace AiGame1.Entities
         {
             HandleInput();
             Move(gameTime);
-            UpdateBoundingBox(10, 10); // Example size
+            UpdateBoundingBox(20, 20); // Corrected size to match visual diameter
         }
 
         private void HandleInput()
@@ -67,30 +67,35 @@ namespace AiGame1.Entities
         {
             if (_path == null || _path.Count == 0)
             {
-                Velocity = Vector2.Zero;
-                return;
+                // No active path, let existing velocity (e.g., from sliding) decay.
+                Velocity *= 0.9f; // Apply friction
+                if (Velocity.Length() < 1.0f)
+                {
+                    Velocity = Vector2.Zero;
+                }
             }
-
-            // Get the next target grid position from the path
-            Vector2 targetGridPos = _path[0];
-            // Convert it to a world position target
-            Vector2 targetWorldPos = Camera.IsometricProjection((int)targetGridPos.X, (int)targetGridPos.Y, TilemapRenderer.TileWidth, TilemapRenderer.TileHeight);
-
-            // Calculate direction and move
-            Vector2 direction = targetWorldPos - WorldPosition;
-            if (direction.Length() > 1.0f) // Check if we are not already at the target
+            else
             {
-                direction.Normalize();
-                Velocity = direction * Speed;
-                WorldPosition += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                // Follow the path
+                Vector2 targetGridPos = _path[0];
+                Vector2 targetWorldPos = Camera.IsometricProjection((int)targetGridPos.X, (int)targetGridPos.Y, TilemapRenderer.TileWidth, TilemapRenderer.TileHeight);
+
+                Vector2 direction = targetWorldPos - WorldPosition;
+                if (direction.Length() > 1.0f)
+                {
+                    direction.Normalize();
+                    Velocity = direction * Speed;
+                }
+                
+                if (Vector2.Distance(WorldPosition, targetWorldPos) < 2.0f)
+                {
+                    WorldPosition = targetWorldPos; // Snap to target
+                    _path.RemoveAt(0);
+                    if (_path.Count == 0) Velocity = Vector2.Zero; // Stop when path is complete
+                }
             }
             
-            // If we are close enough to the target, move to the next point in the path
-            if (Vector2.Distance(WorldPosition, targetWorldPos) < 2.0f)
-            {
-                WorldPosition = targetWorldPos; // Snap to target
-                _path.RemoveAt(0);
-            }
+            WorldPosition += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
         public override void Draw(SpriteRenderer renderer)

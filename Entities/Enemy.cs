@@ -14,7 +14,7 @@ namespace AiGame1.Entities
         public override void Update(GameTime gameTime)
         {
             // AI and movement logic will be added here in later steps
-            UpdateBoundingBox(10, 10); // Example size
+            UpdateBoundingBox(20, 20); // Corrected size to match visual diameter
         }
 
         public override void Draw(SpriteRenderer renderer)
