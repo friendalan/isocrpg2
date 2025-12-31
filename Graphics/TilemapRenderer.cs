@@ -48,11 +48,10 @@ namespace AiGame1.Graphics
                         Vector2 worldPosition = Camera.IsometricProjection(x, y, TileWidth, TileHeight);
                         
                         // Adjust world position for drawing texture:
-                        // The IsometricProjection returns the bottom-center of the tile's footprint.
-                        // To draw the texture correctly, we need to offset it by half its width (left)
-                        // and its full height (up) to position its top-left corner.
-                        // This might need fine-tuning based on the actual tile asset's design.
-                        Vector2 drawPosition = worldPosition - new Vector2(textureToDraw.Width / 2, textureToDraw.Height);
+                        // The IsometricProjection returns the center of the tile's footprint.
+                        // To draw the texture correctly, we need to offset it by half its width and height
+                        // to position its top-left corner for drawing.
+                        Vector2 drawPosition = worldPosition - new Vector2(textureToDraw.Width / 2, textureToDraw.Height / 2);
 
                         _spriteBatch.Draw(textureToDraw, drawPosition, Color.White);
                     }
