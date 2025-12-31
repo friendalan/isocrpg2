@@ -1,0 +1,19 @@
+@/ Review the features described in the file spec.txt and files in the assets folder. Generate a plan of the steps required to implement these features and to create an isometric dungeon crawl game similar to the game Diablo 1. Write this plan into a file called plan1.txt. Do not make any code changes yet.
+
+implement step 1 in the plan1.txt file
+implement step 2 in the plan1.txt file
+implement step 3 in the plan1.txt file
+implement step 4 in the plan1.txt file
+implement step 5 in the plan1.txt file
+
+the mouse click to map translation is slightly off. Mouse clicks seem to register about half a tile out. The player moves to a position about half a tile lower than it should be. The position  calculation or the drawing algorithm probably need to apply a half tile offset somewhere
+
+implement step 6 in the plan1.txt file
+
+There are some issues with the collision detection. The player entity does not slide smoothly around other entities when colliding with them. The player entity also seems to have an error when it moves close to a map cell that is a wall.
+
+There are still some issues with the collision detection. The player entity does not slide smoothly around other entities when colliding with them. The player entity can move into a corner next to 2 wall cells ok but can not move out again, even thought visually the circle is not touching the wall.
+
+(Collisions still not working correctly at this point, move on to next part anyway...)
+
+implement step 7 in the plan1.txt file

@@ -6,6 +6,7 @@ using AiGame1.Core;
 using AiGame1.Graphics;
 using AiGame1.World;
 using AiGame1.Entities;
+using AiGame1.Collision;
 
 namespace AiGame1;
 
@@ -18,6 +19,7 @@ public class Game1 : Game
     private Grid _grid;
     private TilemapRenderer _tilemapRenderer;
     private SpriteRenderer _spriteRenderer;
+    private CollisionManager _collisionManager;
 
     private Texture2D _floorTexture;
     private Texture2D _wallTexture;
@@ -42,6 +44,7 @@ public class Game1 : Game
 
         _camera = new Camera(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
         _grid = new Grid(20, 20); // Example grid size
+        _collisionManager = new CollisionManager(_grid, TilemapRenderer.TileWidth);
 
         _player = new Player(_grid, _camera, new Vector2(5, 5));
         _enemies = new List<Enemy>
@@ -72,11 +75,20 @@ public class Game1 : Game
             Exit();
 
         _camera.Update(gameTime);
+
+        // Update all entities (which applies their velocity)
         _player.Update(gameTime);
         foreach (var enemy in _enemies)
         {
             enemy.Update(gameTime);
         }
+
+        // Create a list of all entities for the collision manager
+        var allEntities = new List<GameEntity> { _player };
+        allEntities.AddRange(_enemies);
+
+        // Detect and resolve collisions
+        _collisionManager.DetectAndResolveCollisions(allEntities, gameTime);
 
         base.Update(gameTime);
     }
