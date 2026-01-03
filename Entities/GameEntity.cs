@@ -8,6 +8,7 @@ namespace AiGame1.Entities
         public Vector2 WorldPosition { get; set; }
         public Vector2 Velocity { get; set; }
         public Rectangle BoundingBox { get; protected set; }
+        public int ColliderRadius { get; set; } = 10;
 
         public abstract void Update(GameTime gameTime);
         public abstract void Draw(SpriteRenderer renderer);

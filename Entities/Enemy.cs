@@ -18,13 +18,13 @@ namespace AiGame1.Entities
         private const float ChaseRange = 250f;
         private const float AttackRange = 35f;
 
-        public Enemy(Vector2 startGridPos, Player player, Grid grid)
+        public Enemy(Vector2 startGridPos, Player player, Grid grid, int CollisionRadius)
         {
             _grid = grid;
             _path = new List<Vector2>();
 
             WorldPosition = Camera.IsometricProjection((int)startGridPos.X, (int)startGridPos.Y, TilemapRenderer.TileWidth, TilemapRenderer.TileHeight);
-
+            ColliderRadius = CollisionRadius;
             _root = BuildBehaviourTree(player);
         }
 
@@ -106,7 +106,7 @@ namespace AiGame1.Entities
 
         public override void Draw(SpriteRenderer renderer)
         {
-            renderer.DrawCircle(WorldPosition, 10, Color.Red);
+            renderer.DrawCircle(WorldPosition, ColliderRadius, Color.Red);
         }
     }
 }

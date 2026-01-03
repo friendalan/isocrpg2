@@ -1,3 +1,5 @@
+using System;
+
 namespace AiGame1.World
 {
     public class Grid
@@ -31,6 +33,16 @@ namespace AiGame1.World
                     }
                 }
             }
+
+            //Add a few random pillers
+            Random rnd = new Random();
+            for (int i = 0; i < 10; i++)
+            {
+                int x  = rnd.Next(1, Width);
+                int y  = rnd.Next(1, Height);
+                Cells[x, y] = new Cell(TileType.Wall);
+            }
+
         }
     }
 }
