@@ -34,7 +34,7 @@ namespace AiGame1.World
                 }
             }
 
-            //Add a few random pillers
+            //Add a few random pillars
             Random rnd = new Random();
             for (int i = 0; i < 10; i++)
             {

@@ -32,7 +32,7 @@ namespace AiGame1.Collision
             {
                 //CheckAndResolveWallCollisions(entity);
                 //CheckAndResolveEntityCollisions(entity);
-
+                
                 CheckCircleCircleCollision(entity);
                 CheckCircleWallCollision(entity);
             }
@@ -40,6 +40,10 @@ namespace AiGame1.Collision
 
         private void CheckCircleCircleCollision(GameEntity entity) {
             List<GameEntity> nearby = _spatialHash.GetNearby(entity);
+            if(entity is Player)
+            {
+                System.Console.WriteLine("Enemy near: " + nearby.Count);
+            } 
             foreach (var other in nearby)
             {
                 if (entity == other) continue; // Don't check against self
@@ -73,6 +77,8 @@ namespace AiGame1.Collision
             // Get the grid coordinates the entity might be touching
             Vector2 minGridPos = Core.Camera.WorldToGrid(new Vector2(entityBounds.Left, entityBounds.Top), TilemapRenderer.TileWidth, TilemapRenderer.TileHeight);
             Vector2 maxGridPos = Core.Camera.WorldToGrid(new Vector2(entityBounds.Right, entityBounds.Bottom), TilemapRenderer.TileWidth, TilemapRenderer.TileHeight);
+
+            //System.Diagnostics.Debug.WriteLine("mingrid: "+ minGridPos + ", maxgrid: " + maxGridPos);
 
             for (int x = (int)minGridPos.X - 1; x <= (int)maxGridPos.X + 1; x++)
             {

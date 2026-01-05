@@ -17,12 +17,18 @@ public class Game1 : Game
 
     private Camera _camera;
     private Grid _grid;
+
+    private bool isIsometricView = true;
+
     private TilemapRenderer _tilemapRenderer;
     private SpriteRenderer _spriteRenderer;
     private CollisionManager _collisionManager;
 
     private Texture2D _floorTexture;
     private Texture2D _wallTexture;
+
+    private Texture2D _floor2D;
+    private Texture2D _wall2D;
     private Texture2D _playerTexture; 
     private Texture2D _enemyTexture; 
 
@@ -62,10 +68,13 @@ public class Game1 : Game
 
         _floorTexture = Content.Load<Texture2D>("assets/floor");
         _wallTexture = Content.Load<Texture2D>("assets/wall");
+        _floor2D = Content.Load<Texture2D>("tiles/stone2D");
+        _wall2D = Content.Load<Texture2D>("tiles/wall2D");
+
         _playerTexture = Content.Load<Texture2D>("assets/player");
         _enemyTexture = Content.Load<Texture2D>("assets/enemy");
 
-        _tilemapRenderer = new TilemapRenderer(_spriteBatch, _grid, _floorTexture, _wallTexture);
+        _tilemapRenderer = new TilemapRenderer(_spriteBatch, _grid, _floorTexture, _wallTexture, _floor2D, _wall2D);
         _spriteRenderer = new SpriteRenderer(_spriteBatch, GraphicsDevice);
     }
 
@@ -99,7 +108,7 @@ public class Game1 : Game
 
         _spriteBatch.Begin(transformMatrix: _camera.TransformMatrix);
 
-        _tilemapRenderer.Draw(_camera);
+        _tilemapRenderer.Draw(_camera, isIsometricView);
 
         _player.Draw(_spriteRenderer);
         foreach (var enemy in _enemies)

@@ -64,6 +64,13 @@ namespace AiGame1.Core
             return new Vector2(worldX, worldY);
         }
 
+        public static Vector2 TopDownProjection(int gridX, int gridY, int tileWidth, int tileHeight)
+        {
+            float worldX = gridX * tileWidth / 2;
+            float worldY = gridY * tileHeight;
+            return new Vector2(worldX, worldY);
+        }
+
         // Helper for converting world coordinates back to grid coordinates
         public static Vector2 WorldToGrid(Vector2 worldPosition, int tileWidth, int tileHeight)
         {
