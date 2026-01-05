@@ -18,7 +18,7 @@ public class Game1 : Game
     private Camera _camera;
     private Grid _grid;
 
-    private bool isIsometricView = true;
+    private bool isIsometricView = false;
 
     private TilemapRenderer _tilemapRenderer;
     private SpriteRenderer _spriteRenderer;
@@ -52,11 +52,11 @@ public class Game1 : Game
         _grid = new Grid(20, 20); // Example grid size
         _collisionManager = new CollisionManager(_grid, TilemapRenderer.TileWidth);
 
-        _player = new Player(_grid, _camera, new Vector2(5, 5), 10);
+        _player = new Player(_grid, _camera, new Vector2(5, 5), 10, isIsometricView);
         _enemies = new List<Enemy>
         {
-            new Enemy(new Vector2(10, 10), _player, _grid, 10),
-            new Enemy(new Vector2(15, 8), _player, _grid, 10)
+            new Enemy(new Vector2(10, 10), _player, _grid, 10, isIsometricView),
+            new Enemy(new Vector2(15, 8), _player, _grid, 10, isIsometricView)
         };
 
         base.Initialize();

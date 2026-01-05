@@ -17,11 +17,19 @@ namespace AiGame1.Entities
 
         private const float Speed = 100f; // Movement speed in pixels per second
 
-        public Player(Grid grid, Camera camera, Vector2 startGridPos, int CollisionRadius)
+        public Player(Grid grid, Camera camera, Vector2 startGridPos, int CollisionRadius, bool IsIsometric)
         {
             _grid = grid;
             _camera = camera;
-            WorldPosition = Camera.IsometricProjection((int)startGridPos.X, (int)startGridPos.Y, TilemapRenderer.TileWidth, TilemapRenderer.TileHeight);
+            if (IsIsometric)
+            {
+                WorldPosition = Camera.IsometricProjection((int)startGridPos.X, (int)startGridPos.Y, TilemapRenderer.TileWidth, TilemapRenderer.TileHeight);
+            }
+            else
+            {
+                WorldPosition = Camera.TopDownProjection((int)startGridPos.X, (int)startGridPos.Y, TilemapRenderer.TileWidth, TilemapRenderer.TileHeight);
+            }
+            
             _path = new List<Vector2>();
             _previousMouseState = Mouse.GetState();
             ColliderRadius = CollisionRadius;

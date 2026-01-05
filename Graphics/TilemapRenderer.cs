@@ -99,7 +99,7 @@ namespace AiGame1.Graphics
                     if (textureToDraw != null)
                     {
                         // Calculate world position for the tile based on grid coordinates
-                        Vector2 worldPosition = Camera.TopDownProjection(x, y, TileWidth, TileHeight);
+                        Vector2 worldPosition = Camera.TopDownProjection(x, y, TileWidth/2, TileHeight);
                         
                         // Adjust world position for drawing texture:
                         // The IsometricProjection returns the center of the tile's footprint.

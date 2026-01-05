@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System;
 using AiGame1.Entities;
 using AiGame1.World;
-using AiGame1.Graphics; // For TilemapRenderer constants
+using AiGame1.Graphics;
+//using System.Numerics; // For TilemapRenderer constants
 
 namespace AiGame1.Collision
 {
@@ -16,6 +17,29 @@ namespace AiGame1.Collision
         {
             _grid = grid;
             _spatialHash = new SpatialHash(spatialHashCellSize);
+            AddGridToSpatialHash();
+        }
+
+        private void AddGridToSpatialHash()
+        {
+            // Create a border of walls and a floor inside
+            for (int x = 0; x < _grid.Width; x++)
+            {
+                for (int y = 0; y < _grid.Height; y++)
+                {
+                    Cell cell = _grid.Cells[x, y];
+                    if (cell.Type is TileType.Wall)
+                    {
+                        Wall wall = new Wall(_grid, new Microsoft.Xna.Framework.Vector2(x,y), 16, 32, 32, false);
+                        _spatialHash.Add(wall);
+                    }
+                    
+                    
+                }
+            }
+
+
+
         }
 
         public void DetectAndResolveCollisions(List<GameEntity> entities, GameTime gameTime)

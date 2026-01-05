@@ -18,12 +18,19 @@ namespace AiGame1.Entities
         private const float ChaseRange = 250f;
         private const float AttackRange = 35f;
 
-        public Enemy(Vector2 startGridPos, Player player, Grid grid, int CollisionRadius)
+        public Enemy(Vector2 startGridPos, Player player, Grid grid, int CollisionRadius, bool IsIsometric)
         {
             _grid = grid;
             _path = new List<Vector2>();
-
-            WorldPosition = Camera.IsometricProjection((int)startGridPos.X, (int)startGridPos.Y, TilemapRenderer.TileWidth, TilemapRenderer.TileHeight);
+            if (IsIsometric)
+            {
+                WorldPosition = Camera.IsometricProjection((int)startGridPos.X, (int)startGridPos.Y, TilemapRenderer.TileWidth, TilemapRenderer.TileHeight);
+            }
+            else
+            {
+                WorldPosition = Camera.TopDownProjection((int)startGridPos.X, (int)startGridPos.Y, TilemapRenderer.TileWidth, TilemapRenderer.TileHeight);
+            }
+            
             ColliderRadius = CollisionRadius;
             _root = BuildBehaviourTree(player);
         }
